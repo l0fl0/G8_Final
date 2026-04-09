@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1>Recommendations</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="profile.html">Profile</a>
+            <a href="login.html" class="guest-link">Login</a>
+            <a href="signup.html" class="guest-link">Sign Up</a>
+            <a href="#" id="logoutLink" class="hidden">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Top Rated Games This Month</h2>
+            <ul id="topRatedList" class="review-list"></ul>
+        </section>
+
+        <section class="card">
+            <h2>Games Similar to What You Played</h2>
+            <ul id="similarGamesList" class="game-list"></ul>
+        </section>
+
+        <section class="card">
+            <h2>Recommendations Based on People You Follow</h2>
+            <ul id="followerRecommendationsList" class="game-list"></ul>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

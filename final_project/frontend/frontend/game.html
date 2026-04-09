@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1 id="gameTitle">Game Details</h1>
+        <nav>
+            <a href="games.html">Back to Games</a>
+            <a href="recommendations.html">Recommendations</a>
+            <a href="profile.html">Profile</a>
+            <a href="login.html" class="guest-link">Login</a>
+            <a href="signup.html" class="guest-link">Sign Up</a>
+            <a href="#" id="logoutLink" class="hidden">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Game Information</h2>
+            <p id="gameDescription">Game description will appear here.</p>
+            <p><strong>Genre:</strong> <span id="gameGenre"></span></p>
+            <p><strong>Tags:</strong> <span id="gameTags"></span></p>
+            <p><strong>Average Rating:</strong> <span id="averageRating"></span></p>
+            <button id="favoriteBtn">Add to Favorites</button>
+            <p id="favoriteMessage" class="message"></p>
+        </section>
+
+        <section class="card">
+            <h2>Reviews</h2>
+            <ul id="reviews" class="review-list"></ul>
+        </section>
+
+        <section class="card">
+            <h3>Add Review</h3>
+            <form id="reviewForm">
+                <label for="rating">Rating (1-10)</label>
+                <input type="number" id="rating" min="1" max="10" required>
+
+                <label for="reviewText">Comment</label>
+                <textarea id="reviewText" rows="4" placeholder="Write your review here..." required></textarea>
+
+                <button type="submit">Submit Review</button>
+            </form>
+            <p id="reviewMessage" class="message"></p>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

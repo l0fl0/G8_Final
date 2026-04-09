@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1>User Profile</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="recommendations.html">Recommendations</a>
+            <a href="login.html" class="guest-link">Login</a>
+            <a href="signup.html" class="guest-link">Sign Up</a>
+            <a href="#" id="logoutLink" class="hidden">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Profile Info</h2>
+            <p><strong>Username:</strong> <span id="profileUsername">Sammy</span></p>
+            <p><strong>Favorite Genre:</strong> Action / Sports</p>
+            <button id="followBtn">Follow User</button>
+            <p id="followMessage" class="message"></p>
+        </section>
+
+        <section class="card">
+            <h2>Your Review History</h2>
+            <ul id="userReviews" class="review-list"></ul>
+        </section>
+
+        <section class="card">
+            <h2>Your Favorites</h2>
+            <ul id="favoriteGames" class="game-list"></ul>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
