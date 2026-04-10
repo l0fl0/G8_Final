@@ -1,0 +1,12 @@
+Query 1:
+Users retrieved (4 rows)
+
+Query 3:
+Ali - Elden Ring - 9
+Sara - Elden Ring - 8
+Total rows: 6
+
+Query 4:
+Elden Ring - 8.5
+God of War - 10
+Total rows: 3
