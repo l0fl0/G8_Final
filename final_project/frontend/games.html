@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault — Browse Games</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1>GameVault</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="games.html" class="active">Games</a>
+            <a href="recommendations.html">Recommendations</a>
+            <a href="profile.html">Profile</a>
+            <a href="login.html" class="guest-link">Login</a>
+            <a href="signup.html" class="guest-link">Sign Up</a>
+            <a href="#" id="logoutLink" class="hidden">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Browse Games</h2>
+
+            <div class="filter-bar">
+                <label>Filter:</label>
+                <button class="filter-btn active" data-genre="all">All</button>
+                <button class="filter-btn" data-genre="Action">Action</button>
+                <button class="filter-btn" data-genre="Sports">Sports</button>
+                <button class="filter-btn" data-genre="RPG">RPG</button>
+                <button class="filter-btn" data-genre="Shooter">Shooter</button>
+            </div>
+
+            <div id="gameList" class="game-grid"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // Genre filter behavior
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const genre = btn.dataset.genre;
+                document.querySelectorAll('.game-card').forEach(card => {
+                    const cardGenre = card.dataset.genre || '';
+                    card.style.display = (genre === 'all' || cardGenre === genre) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-USE game_review;
+USE GamePlatformDB;
 
 -- TEST 1: Duplicate review (should fail)
 INSERT INTO Review (UserID, GameID, Rating) VALUES (1,1,5);

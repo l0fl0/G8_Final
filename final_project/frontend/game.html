@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault — Game Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1 id="gameTitle">Game Details</h1>
+        <nav>
+            <a href="games.html">← Back to Games</a>
+            <a href="recommendations.html">Recommendations</a>
+            <a href="profile.html">Profile</a>
+            <a href="login.html" class="guest-link">Login</a>
+            <a href="signup.html" class="guest-link">Sign Up</a>
+            <a href="#" id="logoutLink" class="hidden">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Game Information</h2>
+            <p id="gameDescription" style="color: var(--muted); font-size: 0.95rem; margin-bottom: 16px;"></p>
+
+            <div class="game-meta">
+                <div class="game-meta-item">
+                    <label>Genre</label>
+                    <span id="gameGenre">—</span>
+                </div>
+                <div class="game-meta-item">
+                    <label>Average Rating</label>
+                    <span class="rating-badge" id="averageRating">—</span>
+                </div>
+                <div class="game-meta-item" style="grid-column: 1 / -1;">
+                    <label>Tags</label>
+                    <span id="gameTags"></span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <button id="favoriteBtn">+ Add to Favorites</button>
+            <p id="favoriteMessage" class="message"></p>
+        </section>
+
+        <section class="card">
+            <h2>Reviews</h2>
+            <ul id="reviews" class="review-list"></ul>
+            <p id="noReviews" class="text-muted" style="display:none; padding: 8px 0;">No reviews yet. Be the first!</p>
+        </section>
+
+        <section class="card">
+            <h3>Write a Review</h3>
+            <form id="reviewForm">
+                <label for="rating">Rating (1–10)</label>
+                <input type="number" id="rating" min="1" max="10" placeholder="8" required>
+
+                <label for="reviewText">Your Review</label>
+                <textarea id="reviewText" rows="4" placeholder="What did you think of this game?" required></textarea>
+
+                <button type="submit">Submit Review</button>
+            </form>
+            <p id="reviewMessage" class="message"></p>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

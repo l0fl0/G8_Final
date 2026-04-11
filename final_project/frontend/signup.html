@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault — Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-wrapper">
+    <header class="auth-header">
+        <a href="index.html">GameVault</a>
+    </header>
+
+    <div class="auth-body">
+        <div style="width: 100%; max-width: 420px;">
+            <section class="card">
+                <h2>Create Account</h2>
+                <p class="text-muted" style="margin-bottom: 4px;">Join GameVault to review games and follow other players.</p>
+
+                <div class="divider"></div>
+
+                <form id="signupForm">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" placeholder="choose_a_username" required>
+
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@email.com" required>
+
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="••••••••" required>
+
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+
+                    <button type="submit">Create Account →</button>
+                </form>
+
+                <p id="signupMessage" class="message"></p>
+
+                <div class="divider"></div>
+
+                <div class="page-links">
+                    <a href="login.html">Already have an account? Login</a><br>
+                    <a href="index.html">← Back to Home</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,7 +1,8 @@
 // backend/routes/games.js  — Owner: Louis Flores
-const express = require('express');
-const router  = express.Router();
-const db      = require('../db');
+const express        = require('express');
+const router         = express.Router();
+const db             = require('../db');
+const authMiddleware = require('../middleware/auth');
 
 // GET /api/games — list all games, optional ?genre= filter
 router.get('/', async (req, res) => {
@@ -48,8 +49,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/games — add a new game
-router.post('/', async (req, res) => {
+// POST /api/games — add a new game (protected)
+router.post('/', authMiddleware, async (req, res) => {
   try {
     const { Title, Genre, Release_date, Developer, Publisher,
             Description, Cover_image, Minimum_specs, Recommended_specs } = req.body;

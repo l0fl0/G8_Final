@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault — Add a Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1>GameVault</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="recommendations.html">Recommendations</a>
+            <a href="profile.html">Profile</a>
+            <a href="login.html" class="guest-link">Login</a>
+            <a href="signup.html" class="guest-link">Sign Up</a>
+            <a href="#" id="logoutLink" class="hidden">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <!-- Auth gate — shown if user is NOT logged in -->
+        <!-- Hidden by JS once login is confirmed -->
+        <section class="card" id="authGate">
+            <h2>Login Required</h2>
+            <p class="text-muted" style="margin-bottom: 16px;">
+                You need to be logged in to add a game to the catalog.
+            </p>
+            <a href="login.html">
+                <button style="margin-top: 0;">Go to Login →</button>
+            </a>
+        </section>
+
+        <!-- Add Game form — hidden until login confirmed -->
+        <section class="card hidden" id="addGameSection">
+            <h2>Add a Game</h2>
+            <p class="text-muted" style="margin-bottom: 4px;">
+                Fill in the details below to add a new game to the GameVault catalog.
+                Only Title is required — all other fields are optional.
+            </p>
+
+            <div class="divider"></div>
+
+            <form id="addGameForm">
+
+                <!-- Required -->
+                <label for="gameTitle">Title <span style="color:var(--danger);">*</span></label>
+                <input type="text" id="gameTitle" placeholder="e.g. Elden Ring" required>
+
+                <!-- Two column row for Genre + Release Date -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div>
+                        <label for="gameGenre">Genre</label>
+                        <input type="text" id="gameGenre" placeholder="e.g. Action RPG">
+                    </div>
+                    <div>
+                        <label for="gameRelease">Release Date</label>
+                        <input type="date" id="gameRelease">
+                    </div>
+                </div>
+
+                <!-- Two column row for Developer + Publisher -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div>
+                        <label for="gameDeveloper">Developer</label>
+                        <input type="text" id="gameDeveloper" placeholder="e.g. FromSoftware">
+                    </div>
+                    <div>
+                        <label for="gamePublisher">Publisher</label>
+                        <input type="text" id="gamePublisher" placeholder="e.g. Bandai Namco">
+                    </div>
+                </div>
+
+                <label for="gameDescription">Description</label>
+                <textarea id="gameDescription" rows="3"
+                    placeholder="Brief description of the game..."></textarea>
+
+                <label for="gameCover">Cover Image URL</label>
+                <input type="url" id="gameCover" placeholder="https://...">
+
+                <!-- Image preview -->
+                <div id="coverPreview" style="display:none; margin-top:10px;">
+                    <img id="coverImg"
+                         style="width:120px; border-radius:8px; border:1px solid var(--border);"
+                         alt="Cover preview">
+                </div>
+
+                <div class="divider"></div>
+
+                <label style="color:var(--muted); font-size:0.75rem; letter-spacing:0.08em;">
+                    SYSTEM REQUIREMENTS (OPTIONAL)
+                </label>
+
+                <label for="gameMinSpecs">Minimum Specs</label>
+                <input type="text" id="gameMinSpecs"
+                    placeholder="e.g. CPU: i5-8600K, RAM: 12GB, GPU: GTX 1060">
+
+                <label for="gameRecSpecs">Recommended Specs</label>
+                <input type="text" id="gameRecSpecs"
+                    placeholder="e.g. CPU: i7-8700K, RAM: 16GB, GPU: RTX 2080">
+
+                <div class="divider"></div>
+
+                <button type="submit" id="submitBtn">+ Add Game to Catalog</button>
+
+            </form>
+
+            <p id="addGameMessage" class="message"></p>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // ── Auth gate ────────────────────────────────────────────
+        // Show the form if logged in, show the login prompt if not
+        const user = getCurrentUser();
+        const authGate      = document.getElementById('authGate');
+        const addGameSection = document.getElementById('addGameSection');
+
+        if (user) {
+            authGate.classList.add('hidden');
+            addGameSection.classList.remove('hidden');
+        }
+
+        // ── Cover image preview ──────────────────────────────────
+        document.getElementById('gameCover').addEventListener('input', function () {
+            const preview = document.getElementById('coverPreview');
+            const img     = document.getElementById('coverImg');
+            if (this.value) {
+                img.src = this.value;
+                preview.style.display = '';
+                img.onerror = () => { preview.style.display = 'none'; };
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // ── Form submit ──────────────────────────────────────────
+        // API: POST /api/games
+        // PROTECTED — sends JWT in Authorization header
+        //
+        // Request body:
+        // {
+        //   Title, Genre, Release_date, Developer, Publisher,
+        //   Description, Cover_image, Minimum_specs, Recommended_specs
+        // }
+        //
+        // Success: { message: "Game added", GameID: <int> }
+        // 400: Title is required
+        // 401: Not authenticated
+        document.getElementById('addGameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const message   = document.getElementById('addGameMessage');
+            const submitBtn = document.getElementById('submitBtn');
+
+            submitBtn.disabled   = true;
+            submitBtn.textContent = 'Adding...';
+
+            const body = {
+                Title:             document.getElementById('gameTitle').value.trim(),
+                Genre:             document.getElementById('gameGenre').value.trim()     || null,
+                Release_date:      document.getElementById('gameRelease').value          || null,
+                Developer:         document.getElementById('gameDeveloper').value.trim() || null,
+                Publisher:         document.getElementById('gamePublisher').value.trim() || null,
+                Description:       document.getElementById('gameDescription').value.trim() || null,
+                Cover_image:       document.getElementById('gameCover').value.trim()     || null,
+                Minimum_specs:     document.getElementById('gameMinSpecs').value.trim()  || null,
+                Recommended_specs: document.getElementById('gameRecSpecs').value.trim()  || null,
+            };
+
+            try {
+                const res  = await fetch('http://localhost:3000/api/games', {
+                    method:  'POST',
+                    headers: authHeaders(),
+                    body:    JSON.stringify(body)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    message.textContent  = `✓ "${body.Title}" added to the catalog!`;
+                    message.style.color  = 'var(--success)';
+
+                    // Offer to go view the new game or add another
+                    message.innerHTML += `
+                        &nbsp;
+                        <a href="game.html?id=${data.GameID}"
+                           style="color:var(--accent2); font-weight:600;">
+                            View it →
+                        </a>
+                        &nbsp;|&nbsp;
+                        <a href="add-game.html"
+                           style="color:var(--muted); font-weight:500;"
+                           onclick="document.getElementById('addGameForm').reset();
+                                    document.getElementById('coverPreview').style.display='none';
+                                    document.getElementById('addGameMessage').textContent='';
+                                    return false;">
+                            Add another
+                        </a>
+                    `;
+
+                    document.getElementById('addGameForm').reset();
+                    document.getElementById('coverPreview').style.display = 'none';
+
+                } else {
+                    message.textContent = data.error || 'Failed to add game.';
+                    message.style.color = 'var(--danger)';
+                }
+
+            } catch (err) {
+                message.textContent = 'Server error. Is the backend running?';
+                message.style.color = 'var(--danger)';
+                console.error('addGame error:', err);
+            } finally {
+                submitBtn.disabled    = false;
+                submitBtn.textContent = '+ Add Game to Catalog';
+            }
+        });
+    </script>
+</body>
+</html>

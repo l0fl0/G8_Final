@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>GameVault — Recommendations</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="page-header">
-        <h1>User Profile</h1>
+        <h1>GameVault</h1>
         <nav>
             <a href="index.html">Home</a>
             <a href="games.html">Games</a>
-            <a href="recommendations.html">Recommendations</a>
+            <a href="recommendations.html" class="active">Recommendations</a>
+            <a href="profile.html">Profile</a>
             <a href="login.html" class="guest-link">Login</a>
             <a href="signup.html" class="guest-link">Sign Up</a>
             <a href="#" id="logoutLink" class="hidden">Logout</a>
@@ -21,21 +22,18 @@
 
     <main class="container">
         <section class="card">
-            <h2>Profile Info</h2>
-            <p><strong>Username:</strong> <span id="profileUsername">Sammy</span></p>
-            <p><strong>Favorite Genre:</strong> Action / Sports</p>
-            <button id="followBtn">Follow User</button>
-            <p id="followMessage" class="message"></p>
+            <h2><span class="section-icon">🏆</span>Top Rated This Month</h2>
+            <ul id="topRatedList" class="game-list"></ul>
         </section>
 
         <section class="card">
-            <h2>Your Review History</h2>
-            <ul id="userReviews" class="review-list"></ul>
+            <h2><span class="section-icon">🎮</span>Similar to What You Played</h2>
+            <ul id="similarGamesList" class="game-list"></ul>
         </section>
 
         <section class="card">
-            <h2>Your Favorites</h2>
-            <ul id="favoriteGames" class="game-list"></ul>
+            <h2><span class="section-icon">👥</span>Recommended by People You Follow</h2>
+            <ul id="followerRecommendationsList" class="game-list"></ul>
         </section>
     </main>
 

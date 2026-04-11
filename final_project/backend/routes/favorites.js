@@ -1,7 +1,8 @@
 // backend/routes/favorites.js  — Owner: Alex Porras
-const express = require('express');
-const router  = express.Router();
-const db      = require('../db');
+const express        = require('express');
+const router         = express.Router();
+const db             = require('../db');
+const authMiddleware = require('../middleware/auth');
 
 // GET /api/favorites?userId=  — all favorites for a user
 router.get('/', async (req, res) => {
@@ -26,8 +27,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/favorites — add a favorite
-router.post('/', async (req, res) => {
+// POST /api/favorites — add a favorite (protected)
+router.post('/', authMiddleware, async (req, res) => {
   try {
     const { userId, gameId } = req.body;
     if (!userId || !gameId) {
@@ -46,8 +47,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /api/favorites — remove a favorite
-router.delete('/', async (req, res) => {
+// DELETE /api/favorites — remove a favorite (protected)
+router.delete('/', authMiddleware, async (req, res) => {
   try {
     const { userId, gameId } = req.body;
     if (!userId || !gameId) {

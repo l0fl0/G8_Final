@@ -1,16 +1,18 @@
 // backend/routes/reviews.js  — Owner: Jamar Morisseau
-const express = require('express');
-const router  = express.Router();
-const db      = require('../db');
+const express        = require('express');
+const router         = express.Router();
+const db             = require('../db');
+const authMiddleware = require('../middleware/auth');
 
 // GET /api/reviews?gameId=  — reviews for a specific game
+// GET /api/reviews?userId=  — reviews written by a specific user
 router.get('/', async (req, res) => {
   try {
-    const { gameId } = req.query;
+    const { gameId, userId } = req.query;
     let sql = `
       SELECT r.ReviewID, r.Rating, r.Comment, r.Created_At,
-             u.Username, u.AvatarURL,
-             g.Title AS GameTitle
+             u.UserID, u.Username, u.AvatarURL,
+             g.GameID, g.Title AS GameTitle
       FROM Review r
       JOIN User u ON r.UserID = u.UserID
       JOIN Game g ON r.GameID = g.GameID
@@ -19,6 +21,9 @@ router.get('/', async (req, res) => {
     if (gameId) {
       sql += ' WHERE r.GameID = ?';
       params.push(gameId);
+    } else if (userId) {
+      sql += ' WHERE r.UserID = ?';
+      params.push(userId);
     }
     sql += ' ORDER BY r.Created_At DESC';
     const [rows] = await db.query(sql, params);
@@ -28,8 +33,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/reviews — submit a review
-router.post('/', async (req, res) => {
+// POST /api/reviews — submit a review (protected)
+router.post('/', authMiddleware, async (req, res) => {
   try {
     const { userId, gameId, rating, comment } = req.body;
     if (!userId || !gameId || !rating) {
@@ -51,8 +56,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /api/reviews/:id — remove a review
-router.delete('/:id', async (req, res) => {
+// DELETE /api/reviews/:id — remove a review (protected)
+router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const [result] = await db.query(
       'DELETE FROM Review WHERE ReviewID = ?', [req.params.id]

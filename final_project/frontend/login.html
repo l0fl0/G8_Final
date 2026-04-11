@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault — Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-wrapper">
+    <header class="auth-header">
+        <a href="index.html">GameVault</a>
+    </header>
+
+    <div class="auth-body">
+        <div style="width: 100%; max-width: 420px;">
+            <section class="card">
+                <h2>Sign In</h2>
+                <p class="text-muted" style="margin-bottom: 4px;">Welcome back. Enter your credentials to continue.</p>
+
+                <div class="divider"></div>
+
+                <form id="loginForm">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="your_username" required>
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+
+                    <button type="submit">Login →</button>
+                </form>
+
+                <p id="loginMessage" class="message"></p>
+
+                <div class="divider"></div>
+
+                <div class="page-links">
+                    <a href="signup.html">Need an account? Sign Up</a><br>
+                    <a href="index.html">← Back to Home</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
