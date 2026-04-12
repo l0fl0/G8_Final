@@ -57,10 +57,15 @@ function jsonHeaders() {
 
 function updateNavState() {
     const user = getCurrentUser();
-    const guestLinks = document.querySelectorAll('.guest-link');
-    const logoutLinks = document.querySelectorAll('#logoutLink');
+    const guestLinks    = document.querySelectorAll('.guest-link');
+    const logoutLinks   = document.querySelectorAll('#logoutLink');
+    const addGameLinks  = document.querySelectorAll('#addGameLink');
 
+    // Show Login/Sign Up only when logged out
     guestLinks.forEach(link => link.classList.toggle('hidden', !!user));
+
+    // Show Add Game + Logout only when logged in
+    addGameLinks.forEach(link => link.classList.toggle('hidden', !user));
 
     logoutLinks.forEach(link => {
         link.classList.toggle('hidden', !user);

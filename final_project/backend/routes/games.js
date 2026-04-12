@@ -49,23 +49,23 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/games — add a new game (protected)
-router.post('/', authMiddleware, async (req, res) => {
-  try {
-    const { Title, Genre, Release_date, Developer, Publisher,
-            Description, Cover_image, Minimum_specs, Recommended_specs } = req.body;
-    if (!Title) return res.status(400).json({ error: 'Title is required' });
-    const [result] = await db.query(
-      `INSERT INTO Game (Title, Genre, Release_date, Developer, Publisher,
-                         Description, Cover_image, Minimum_specs, Recommended_specs)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [Title, Genre, Release_date, Developer, Publisher,
-       Description, Cover_image, Minimum_specs, Recommended_specs]
-    );
-    res.status(201).json({ message: 'Game added', GameID: result.insertId });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// // POST /api/games — add a new game (protected)
+// router.post('/', authMiddleware, async (req, res) => {
+//   try {
+//     const { Title, Genre, Release_date, Developer, Publisher,
+//             Description, Cover_image, Minimum_specs, Recommended_specs } = req.body;
+//     if (!Title) return res.status(400).json({ error: 'Title is required' });
+//     const [result] = await db.query(
+//       `INSERT INTO Game (Title, Genre, Release_date, Developer, Publisher,
+//                          Description, Cover_image, Minimum_specs, Recommended_specs)
+//        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+//       [Title, Genre, Release_date, Developer, Publisher,
+//        Description, Cover_image, Minimum_specs, Recommended_specs]
+//     );
+//     res.status(201).json({ message: 'Game added', GameID: result.insertId });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 module.exports = router;
