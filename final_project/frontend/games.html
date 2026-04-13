@@ -20,9 +20,23 @@
         </nav>
     </header>
 
-    <main class="container">
-        <section class="card">
-            <h2>Browse Games</h2>
+    <main class="container games-page">
+        <section class="review-hero">
+            <div>
+                <p class="eyebrow">Player scores and posts</p>
+                <h2>Find your next game through real reviews.</h2>
+                <p>Browse ratings first, then post your own take when a game deserves the spotlight.</p>
+            </div>
+            <button id="openReviewModal" class="primary-action" type="button">Write a Review</button>
+        </section>
+
+        <section class="card games-panel">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Review board</p>
+                    <h2>Browse Games</h2>
+                </div>
+            </div>
 
             <div class="filter-bar">
                 <label>Filter:</label>
@@ -35,6 +49,35 @@
 
             <div id="gameList" class="game-grid"></div>
         </section>
+
+        <div id="reviewModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <div>
+                        <p class="eyebrow">New player review</p>
+                        <h2 id="reviewModalTitle">Add a Game Review</h2>
+                    </div>
+                    <button id="closeReviewModal" class="icon-button" type="button" aria-label="Close review form">x</button>
+                </div>
+                <p class="helper-text">Share a game, score it from 1 to 10, and leave a short post for other players.</p>
+                <form id="addGameReviewForm" class="review-form">
+                    <label for="newGameTitle">Game title</label>
+                    <input id="newGameTitle" type="text" placeholder="Example: Elden Ring" required>
+
+                    <label for="newGameGenre">Genre</label>
+                    <input id="newGameGenre" type="text" placeholder="Example: Action RPG" required>
+
+                    <label for="newGameRating">Rating score</label>
+                    <input id="newGameRating" type="number" min="1" max="10" step="0.1" placeholder="8.5" required>
+
+                    <label for="newGameReview">Written post</label>
+                    <textarea id="newGameReview" rows="4" placeholder="What stood out? Gameplay, story, graphics, replay value..." required></textarea>
+
+                    <button id="reviewSubmitButton" type="submit">Post Review</button>
+                    <p id="addGameReviewMessage" class="message" aria-live="polite"></p>
+                </form>
+            </div>
+        </div>
     </main>
 
     <script src="app.js"></script>

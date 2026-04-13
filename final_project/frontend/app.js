@@ -6,6 +6,15 @@
 
 const API = 'http://localhost:3000/api';
 
+function escapeHTML(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // ============================================================
 // SECTION 1 — AUTH HELPERS
 // JWT token is stored in localStorage after login/signup.
@@ -91,6 +100,16 @@ function getParam(key) {
 
 const gameList = document.getElementById('gameList');
 if (gameList) {
+    let currentGenre = null;
+    let editingReview = null;
+    let currentUserReviewsByGameId = new Map();
+
+    const reviewModal = document.getElementById('reviewModal');
+    const addGameReviewForm = document.getElementById('addGameReviewForm');
+    const openReviewModal = document.getElementById('openReviewModal');
+    const closeReviewModal = document.getElementById('closeReviewModal');
+    const reviewSubmitButton = document.getElementById('reviewSubmitButton');
+    const addGameReviewMessage = document.getElementById('addGameReviewMessage');
 
     // Wire genre filter buttons to pass ?genre= to loadGames()
     // Each .filter-btn has a data-genre attribute set in games.html.
@@ -100,9 +119,48 @@ if (gameList) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const genre = btn.dataset.genre === 'all' ? null : btn.dataset.genre;
+            currentGenre = genre;
             loadGames(genre);
         });
     });
+
+    function setReviewModalOpen(isOpen) {
+        if (!reviewModal) return;
+        reviewModal.classList.toggle('hidden', !isOpen);
+        document.body.classList.toggle('modal-open', isOpen);
+        if (isOpen) document.getElementById('newGameTitle').focus();
+    }
+
+    function openCreateReviewForm() {
+        editingReview = null;
+        addGameReviewForm.reset();
+        document.getElementById('reviewModalTitle').textContent = 'Add a Game Review';
+        reviewSubmitButton.textContent = 'Post Review';
+        addGameReviewMessage.textContent = '';
+        setReviewModalOpen(true);
+    }
+
+    function openEditReviewForm(review) {
+        editingReview = review;
+        document.getElementById('reviewModalTitle').textContent = 'Edit Your Review';
+        reviewSubmitButton.textContent = 'Update Review';
+        document.getElementById('newGameTitle').value = review.GameTitle || '';
+        document.getElementById('newGameGenre').value = review.Genre || '';
+        document.getElementById('newGameRating').value = review.Rating || '';
+        document.getElementById('newGameReview').value = review.Comment || '';
+        addGameReviewMessage.textContent = '';
+        setReviewModalOpen(true);
+    }
+
+    async function loadCurrentUserReviews() {
+        const user = getCurrentUser();
+        currentUserReviewsByGameId = new Map();
+        if (!user) return;
+
+        const res = await fetch(`${API}/reviews?userId=${user.UserID}`);
+        const reviews = await res.json();
+        reviews.forEach(review => currentUserReviewsByGameId.set(Number(review.GameID), review));
+    }
 
     // ------------------------------------------------------------
     // API: GET /api/games
@@ -134,6 +192,7 @@ if (gameList) {
             : `${API}/games`;
 
         try {
+            await loadCurrentUserReviews();
             const res = await fetch(url);
             const games = await res.json();
 
@@ -149,14 +208,24 @@ if (gameList) {
             //   game.GameID, game.Title, game.Genre, game.AverageRating,
             //   game.TotalReviews, game.Cover_image, game.Developer, game.Release_date
             games.forEach(game => {
+                const userReview = currentUserReviewsByGameId.get(Number(game.GameID));
                 const card = document.createElement('div');
                 card.className = 'game-card';
                 card.dataset.genre = game.Genre;
 
                 card.innerHTML = `
-                    <h3><a href="game.html?id=${game.GameID}">${game.Title}</a></h3>
+                    <div class="game-card-topline">
+                        <h3><a href="game.html?id=${game.GameID}">${escapeHTML(game.Title)}</a></h3>
+                        ${userReview ? `
+                            <div class="review-actions">
+                                <button class="secondary-action" type="button" data-edit-review="${userReview.ReviewID}">Edit</button>
+                                <button class="danger-action" type="button" data-delete-review="${userReview.ReviewID}">Delete</button>
+                            </div>
+                        ` : ''}
+                    </div>
                     <p><strong>Genre:</strong> ${game.Genre || '—'}</p>
                     <div class="rating-badge">${game.AverageRating ?? '—'} / 10</div>
+                    ${userReview ? `<p class="review-preview">"${escapeHTML(userReview.Comment || '')}"</p>` : ''}
                     <p class="text-muted" style="font-size:0.8rem; margin-top:6px;">
                         ${game.TotalReviews ?? 0} review${game.TotalReviews !== 1 ? 's' : ''}
                     </p>
@@ -170,7 +239,100 @@ if (gameList) {
         }
     }
 
-    loadGames(); // Initial load — no genre filter
+    if (openReviewModal) {
+        openReviewModal.addEventListener('click', () => {
+            if (!getCurrentUser()) {
+                alert('Please log in before writing a review.');
+                window.location.href = 'login.html';
+                return;
+            }
+            openCreateReviewForm();
+        });
+    }
+
+    if (closeReviewModal) {
+        closeReviewModal.addEventListener('click', () => setReviewModalOpen(false));
+    }
+
+    if (reviewModal) {
+        reviewModal.addEventListener('click', (e) => {
+            if (e.target === reviewModal) setReviewModalOpen(false);
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && reviewModal && !reviewModal.classList.contains('hidden')) {
+            setReviewModalOpen(false);
+        }
+    });
+
+    gameList.addEventListener('click', async (e) => {
+        const editButton = e.target.closest('[data-edit-review]');
+        const deleteButton = e.target.closest('[data-delete-review]');
+
+        if (editButton) {
+            e.preventDefault();
+            const reviewId = Number(editButton.dataset.editReview);
+            const review = [...currentUserReviewsByGameId.values()].find(item => item.ReviewID === reviewId);
+            if (review) openEditReviewForm(review);
+        }
+
+        if (deleteButton) {
+            e.preventDefault();
+            const reviewId = Number(deleteButton.dataset.deleteReview);
+            const review = [...currentUserReviewsByGameId.values()].find(item => item.ReviewID === reviewId);
+            if (!review || !confirm(`Delete your review for ${review.GameTitle}?`)) return;
+
+            const res = await fetch(`${API}/reviews/${reviewId}`, {
+                method: 'DELETE',
+                headers: authHeaders()
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                alert(data.error || 'Could not delete review.');
+                return;
+            }
+            loadGames(currentGenre);
+        }
+    });
+
+    if (addGameReviewForm) {
+        addGameReviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('newGameTitle').value.trim();
+            const genre = document.getElementById('newGameGenre').value.trim();
+            const rating = Number(document.getElementById('newGameRating').value);
+            const comment = document.getElementById('newGameReview').value.trim();
+
+            if (!title || !genre || !comment || rating < 1 || rating > 10) {
+                addGameReviewMessage.textContent = 'Please enter a game, genre, rating from 1 to 10, and written post.';
+                return;
+            }
+
+            const url = editingReview ? `${API}/reviews/${editingReview.ReviewID}` : `${API}/reviews`;
+            const method = editingReview ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: authHeaders(),
+                body: JSON.stringify({ gameTitle: title, genre, rating, comment })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                addGameReviewMessage.textContent = data.error || 'Could not save review.';
+                return;
+            }
+
+            addGameReviewMessage.textContent = editingReview ? 'Review updated.' : 'Review posted.';
+            addGameReviewForm.reset();
+            loadGames(currentGenre);
+            setTimeout(() => setReviewModalOpen(false), 500);
+        });
+    }
+
+    loadGames();
 }
 
 // ============================================================

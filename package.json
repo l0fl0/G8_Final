@@ -1,0 +1,14 @@
+{
+  "name": "g8-final",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GameVault final project workspace",
+  "workspaces": [
+    "final_project/backend"
+  ],
+  "scripts": {
+    "frontend": "node final_project/frontend/server.js",
+    "start": "npm --prefix final_project/backend start",
+    "install:backend": "npm --prefix final_project/backend install"
+  }
+}

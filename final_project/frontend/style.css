@@ -546,6 +546,167 @@ ul { padding-left: 0; list-style: none; }
 
 .text-muted { color: var(--muted); font-size: 0.88rem; }
 
+.games-page {
+    display: grid;
+    gap: 22px;
+}
+
+.review-hero {
+    align-items: center;
+    background:
+        linear-gradient(135deg, rgba(13,15,20,0.92), rgba(30,35,48,0.86)),
+        url("https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=80");
+    background-position: center;
+    background-size: cover;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    min-height: 210px;
+    padding: 34px;
+    box-shadow: var(--shadow);
+}
+
+.review-hero h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 44px;
+    line-height: 1.05;
+    margin-bottom: 12px;
+    max-width: 720px;
+}
+
+.review-hero p {
+    color: #cbd5e1;
+    font-size: 1rem;
+    max-width: 620px;
+}
+
+.eyebrow {
+    color: var(--accent2);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin: 0 0 6px;
+    text-transform: uppercase;
+}
+
+.section-heading {
+    align-items: flex-end;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.section-heading h2 {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.primary-action {
+    background: var(--text);
+    color: var(--bg);
+    flex: 0 0 auto;
+    margin-top: 0;
+}
+
+.game-card-topline {
+    align-items: flex-start;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.review-actions {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 6px;
+}
+
+.review-actions button {
+    font-size: 0.72rem;
+    margin-top: 0;
+    padding: 6px 9px;
+}
+
+.secondary-action {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent2);
+}
+
+.danger-action {
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.35);
+    color: #fca5a5;
+}
+
+.review-preview {
+    border-left: 3px solid var(--accent2);
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin: 12px 0;
+    padding-left: 10px;
+}
+
+.helper-text {
+    color: var(--muted);
+    margin: 4px 0 18px;
+}
+
+.modal-open {
+    overflow: hidden;
+}
+
+.modal-overlay {
+    align-items: center;
+    background: rgba(7, 10, 15, 0.72);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    padding: 24px;
+    position: fixed;
+    z-index: 50;
+}
+
+.modal-overlay.hidden {
+    display: none !important;
+}
+
+.modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 28px 70px rgba(0,0,0,0.48);
+    max-height: 90vh;
+    max-width: 560px;
+    overflow: auto;
+    padding: 26px;
+    width: 100%;
+}
+
+.modal-header {
+    align-items: flex-start;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.icon-button {
+    align-items: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    display: inline-flex;
+    height: 34px;
+    justify-content: center;
+    margin-top: 0;
+    padding: 0;
+    width: 34px;
+}
+
 /* ── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

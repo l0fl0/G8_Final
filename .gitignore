@@ -1,3 +1,4 @@
 final_project/backend/.env
 final_project/backend/node_modules/
-
+node_modules/
+npm-debug.log*
